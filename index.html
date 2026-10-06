@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nghệ thuật Quân sự trong Ba lần Kháng chiến chống Nguyên – Mông (Thế kỷ XIII)</title>
+    <meta name="description" content="Bài thuyết trình tương tác về Nghệ thuật Quân sự của quân dân nhà Trần trong ba lần kháng chiến chống quân Nguyên-Mông xâm lược.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style_gdqp.css">
+</head>
+<body class="dark-theme">
+    
+    <!-- Top Progress Bar -->
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container">
+        
+        <!-- Sidebar Navigation (Collapsible) -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fa-solid fa-list-ol"></i> Mục lục Slide</h3>
+                <button id="toggle-sidebar-btn" aria-label="Thu gọn danh sách" title="Thu gọn danh sách">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+            </div>
+            <nav class="slide-list-nav">
+                <ul id="slide-list">
+                    <!-- Javascript will populate this list -->
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Slide Workspace -->
+        <main id="slide-workspace">
+            
+            <!-- Floating Menu Toggle Sidebar (When collapsed) -->
+            <button id="expand-sidebar-btn" class="floating-btn hidden" aria-label="Mở rộng danh sách" title="Mở danh sách slide">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <!-- Active Slide Container -->
+            <article id="slide-viewer" class="slide-card">
+                <!-- Javascript will render slide content here -->
+            </article>
+
+            <!-- Navigation Controls (Footer) -->
+            <footer id="controls-footer">
+                <div class="footer-left">
+                    <span id="slide-counter">Slide 1 / 18</span>
+                </div>
+                
+                <div class="footer-center">
+                    <button id="prev-btn" class="nav-control-btn" aria-label="Slide trước" title="Slide trước (Mũi tên trái)">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <button id="next-btn" class="nav-control-btn" aria-label="Slide tiếp theo" title="Slide tiếp theo (Mũi tên phải/Space)">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="footer-right">
+                    <div class="control-group">
+                        <button id="theme-btn" class="control-icon-btn" aria-label="Đổi giao diện" title="Đổi giao diện (Dark/Light/Military)">
+                            <i class="fa-solid fa-palette"></i>
+                            <span class="btn-text">Giao diện</span>
+                        </button>
+                        <button id="presenter-btn" class="control-icon-btn" aria-label="Bật kịch bản thuyết trình" title="Bật kịch bản nói (Speaker Notes)">
+                            <i class="fa-regular fa-comment-dots"></i>
+                            <span class="btn-text">Kịch bản</span>
+                        </button>
+                        <button id="fullscreen-btn" class="control-icon-btn" aria-label="Bật toàn màn hình" title="Bật toàn màn hình (F)">
+                            <i class="fa-solid fa-expand"></i>
+                            <span class="btn-text">Toàn màn hình</span>
+                        </button>
+                        <button id="print-btn" class="control-icon-btn" aria-label="In/Xuất PDF" title="In / Xuất PDF (Ctrl+P)">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span class="btn-text">Xuất PDF</span>
+                        </button>
+                        <button id="print-script-btn" class="control-icon-btn" aria-label="Xuất Kịch Bản" title="In / Xuất Kịch Bản Thuyết Trình (A4)">
+                            <i class="fa-solid fa-file-lines"></i>
+                            <span class="btn-text">Xuất Kịch Bản</span>
+                        </button>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <!-- Right Presenter Notes Panel (Speaker Notes) -->
+        <aside id="presenter-panel" class="collapsed">
+            <div class="presenter-header">
+                <h3><i class="fa-solid fa-bullhorn"></i> Kịch bản Thuyết trình</h3>
+                <div class="presenter-actions">
+                    <button id="timer-reset-btn" title="Đặt lại đồng hồ" class="action-mini-btn">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                    <span id="presenter-timer">00:00</span>
+                    <button id="print-script-btn-presenter" title="Xuất kịch bản ra PDF" class="action-mini-btn">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </button>
+                    <button id="close-presenter-btn" aria-label="Đóng kịch bản" class="action-mini-btn">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="presenter-text-controls">
+                <span class="label">Cỡ chữ:</span>
+                <button id="font-dec-btn" class="font-size-btn"><i class="fa-solid fa-minus"></i></button>
+                <span id="font-size-display">16px</span>
+                <button id="font-inc-btn" class="font-size-btn"><i class="fa-solid fa-plus"></i></button>
+            </div>
+
+            <div class="presenter-body">
+                <div id="speaker-script">
+                    <!-- Script for active slide will be rendered here -->
+                </div>
+            </div>
+
+            <div class="presenter-tips">
+                <p><i class="fa-solid fa-lightbulb"></i> <strong>Mẹo thuyết trình:</strong> Hãy nhìn thẳng vào khán giả, nhấn mạnh các số liệu và sự kiện lịch sử quan trọng, giữ giọng điệu trầm hùng.</p>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Theme selection dropdown modal (hidden by default) -->
+    <div id="theme-modal" class="modal hidden">
+        <div class="modal-content">
+            <h4>Chọn chủ đề giao diện</h4>
+            <div class="theme-options">
+                <button class="theme-option-card dark active" data-theme="dark">
+                    <div class="color-preview" style="background-color: #0d1117;"></div>
+                    <span>Deep Space (Tối)</span>
+                </button>
+                <button class="theme-option-card light" data-theme="light">
+                    <div class="color-preview" style="background-color: #f8f9fa;"></div>
+                    <span>Minimalist (Sáng)</span>
+                </button>
+                <button class="theme-option-card military" data-theme="military">
+                    <div class="color-preview" style="background-color: #1a2a0a;"></div>
+                    <span>Military (Quân sự)</span>
+                </button>
+            </div>
+            <button id="close-theme-modal-btn" class="modal-close-btn">Đóng</button>
+        </div>
+    </div>
+
+    <!-- Javascript app file -->
+    <script src="app_gdqp.js"></script>
+</body>
+</html>
