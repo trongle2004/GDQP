@@ -21,7 +21,7 @@ const slides = [
                 { name: "Trương Văn Mạnh", studentId: "25TX810048" },
                 { name: "Lê Huy Trọng", studentId: "25TX810061" },
                 { name: "Trần Nguyễn Trung Kiên", studentId: "25TX610010" },
-                { name: "Nguyễn Minh Thuận", studentId: "25TX610013" },
+                { name: "Nguyễn Minh Thuận", studentId: "25TX810059" },
                 { name: "Trần Minh Mẫn", studentId: "25TX810047" }
             ],
             lecturer: "Đỗ Quang Trực",
@@ -405,7 +405,7 @@ const slides = [
                 { name: "Trương Văn Mạnh", studentId: "25TX810048" },
                 { name: "Lê Huy Trọng", studentId: "25TX810061" },
                 { name: "Trần Nguyễn Trung Kiên", studentId: "25TX610010" },
-                { name: "Nguyễn Minh Thuận", studentId: "25TX610013" },
+                { name: "Nguyễn Minh Thuận", studentId: "25TX810059" },
                 { name: "Trần Minh Mẫn", studentId: "25TX810047" }
             ],
             lecturer: "Đỗ Quang Trực",
