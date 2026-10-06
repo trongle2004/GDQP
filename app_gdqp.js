@@ -15,7 +15,7 @@ const slides = [
         image: "images/tran_vs_mongol_battle.jpg",
         content: {
             members: [
-                { name: "Lê Văn Mẫn", studentId: "25TX810046", role: "Nhóm trưởng" },
+                { name: "Lê Văn Mẫn", studentId: "25TX810046" },
                 { name: "Ngô Đức Phú", studentId: "25TX810052" },
                 { name: "Lại Trần Phương Thái", studentId: "25TX810056" },
                 { name: "Trương Văn Mạnh", studentId: "25TX810048" },
@@ -41,9 +41,10 @@ const slides = [
         content: {
             stats: [
                 { number: "3 lần", label: "Số lần quân Nguyên–Mông xâm lược Đại Việt: 1258, 1285, 1287–1288" },
+ { number: "3 vạn", label: "Quân kỵ binh tinh nhuệ xâm lược lần đầu từ Vân Nam (1258)" },
                 { number: "50 vạn", label: "Quân số lần xâm lược thứ hai (1285) do Thái tử Thoát Hoan chỉ huy" },
-                { number: "30 vạn", label: "Quân số lần xâm lược thứ ba (1287–1288) kèm hạm đội thuyền lương" },
-                { number: "3 vạn", label: "Quân kỵ binh tinh nhuệ xâm lược lần đầu từ Vân Nam (1258)" }
+                { number: "30 vạn", label: "Quân số lần xâm lược thứ ba (1287–1288) kèm hạm đội thuyền lương" }
+               
             ]
         },
         speakerNotes: "<strong>[Bối cảnh – Nhấn mạnh thực lực đối phương]</strong><br><br>Để hiểu được tầm vóc của những chiến thắng này, chúng ta cần nhìn vào thực lực khủng khiếp của đế chế Nguyên–Mông. Đây là đế quốc đã tiêu diệt nhà Tống hùng mạnh, đánh bại Ba Tư và Nga, khiến cả châu Âu khiếp sợ. Vậy mà trước quân dân Đại Việt, họ đã phải nếm mùi thất bại cay đắng tới ba lần."
@@ -248,7 +249,7 @@ const slides = [
         content: {
             bullets: [
                 "<strong>Điểm yếu chí mạng của địch:</strong> Hệ thống hậu cần quân Mông Cổ phụ thuộc nhiều vào <em>cướp bóc lương thực tại chỗ</em> – không vận chuyển đủ lương thực từ xa.",
-                "<strong>Triệt nguồn sống của địch:</strong> Nhân dân ở các làng mạc và kinh thành Thăng Long được lệnh mang theo toàn bộ lương thực, tài sản sơ tán đi nơi khác – thực hiện chính sách 'Thanh dã' (đồng không mông quạnh).",
+                "<strong>Triệt nguồn sống của địch:</strong> Nhân dân ở các làng mạc và kinh thành Thăng Long được lệnh mang theo toàn bộ lương thực, tài sản sơ tán đi nơi khác – thực hiện chính sách 'Vườn không nhà trống'.",
                 "<strong>Hệ quả tất yếu:</strong> Quân Nguyên tiến vào Thăng Long nhưng chỉ thấy một tòa thành trống rỗng. Đói khát, thiếu quân nhu khiến thể lực và tinh thần của quân giặc suy sụp nhanh chóng, đẩy chúng vào thế bị động hoàn toàn."
             ]
         },
@@ -393,13 +394,13 @@ const slides = [
     {
         id: "slide-18",
         category: "Kết luận",
-        title: "Cảm ơn thầy/cô và các bạn đã lắng nghe!",
+        title: "Cảm ơn thầy và các bạn đã lắng nghe!",
         subtitle: "Nhóm 2 – Môn Giáo dục Quốc phòng – An ninh",
         layout: "cover",
         image: "images/tran_quoc_tuan.jpg",
         content: {
             members: [
-                { name: "Lê Văn Mẫn", studentId: "25TX810046", role: "Nhóm trưởng" },
+                { name: "Lê Văn Mẫn", studentId: "25TX810046" },
                 { name: "Ngô Đức Phú", studentId: "25TX810052" },
                 { name: "Lại Trần Phương Thái", studentId: "25TX810056" },
                 { name: "Trương Văn Mạnh", studentId: "25TX810048" },
@@ -665,6 +666,17 @@ function buildQuoteLayout(slide) {
     </div>`;
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.matchMedia('(max-width: 600px)').matches) toggleSidebar();
+    updateSlideListUI();
+    renderSlide(slides[0]);
+
+    // Bổ sung: Gắn sự kiện cho các nút Xuất PDF và Xuất Kịch Bản
+    document.getElementById('print-btn').addEventListener('click', printSlidesPDF);
+    document.getElementById('print-script-btn').addEventListener('click', printScriptPDF);
+    document.getElementById('print-script-btn-presenter').addEventListener('click', printScriptPDF);
+});
+
 // ==========================================================================
 // UI HELPERS
 // ==========================================================================
@@ -876,39 +888,95 @@ document.getElementById('fullscreen-btn').addEventListener('click', toggleFullsc
 // PRINT FUNCTIONS
 // ==========================================================================
 function printSlidesPDF() {
-    window.print();
+    let printContainer = document.getElementById("print-container");
+    if (!printContainer) {
+        printContainer = document.createElement("div");
+        printContainer.id = "print-container";
+        document.body.appendChild(printContainer);
+    }
+    printContainer.innerHTML = "";
+    
+    slides.forEach((slide) => {
+        const slideCard = document.createElement("div");
+        slideCard.className = "slide-card";
+        slideCard.innerHTML = buildSlideHTML(slide);
+        printContainer.appendChild(slideCard);
+    });
+    
+    document.body.classList.add("is-printing");
+
+    // --- XỬ LÝ BẮT BUỘC TẢI ẢNH TRƯỚC KHI IN ---
+    const images = printContainer.querySelectorAll('img');
+    const imageLoadPromises = [];
+
+    images.forEach(img => {
+        // Tắt tính năng tải trễ, ép tải ngay lập tức
+        img.setAttribute('loading', 'eager');
+        img.removeAttribute('decoding');
+
+        // Bắt sự kiện tải ảnh
+        if (!img.complete) {
+            imageLoadPromises.push(new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve; // Lỗi ảnh vẫn cho qua để không treo lệnh in
+            }));
+        }
+    });
+
+    // Chờ toàn bộ ảnh tải xong (hoặc báo lỗi) rồi mới mở hộp thoại in
+    Promise.all(imageLoadPromises).then(() => {
+        setTimeout(() => {
+            window.print();
+            document.body.classList.remove("is-printing");
+            printContainer.innerHTML = "";
+        }, 300);
+    });
 }
 
 function printScriptPDF() {
-    const printWin = window.open('', '_blank');
-    const scriptContent = slides.map((slide, i) => {
-        const notes = slide.speakerNotes ? slide.speakerNotes.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '') : 'Chưa có kịch bản.';
-        return `<div style="page-break-inside:avoid;margin-bottom:30px;border-bottom:2px solid #ccc;padding-bottom:20px;">
-            <h3 style="color:#8b0000;font-size:16px;">Slide ${i+1}: ${slide.title}</h3>
-            <p style="white-space:pre-wrap;font-size:14px;line-height:1.8;color:#333;">${notes}</p>
-        </div>`;
-    }).join('');
+    let printScriptContainer = document.getElementById("print-script-container");
+    if (!printScriptContainer) {
+        printScriptContainer = document.createElement("div");
+        printScriptContainer.id = "print-script-container";
+        document.body.appendChild(printScriptContainer);
+    }
+    printScriptContainer.innerHTML = "";
     
-    printWin.document.write(`<!DOCTYPE html><html><head>
-        <title>Kịch bản thuyết trình GDQP – Nhóm 2</title>
-        <meta charset="UTF-8">
-        <style>
-            body { font-family: 'Times New Roman', serif; margin: 40px; color: #000; }
-            h1 { color: #8b0000; text-align: center; margin-bottom: 8px; }
-            .subtitle { text-align: center; font-style: italic; margin-bottom: 30px; color: #555; }
-        </style>
-    </head><body>
-        <h1>Kịch bản Thuyết trình</h1>
-        <div class="subtitle">Nghệ thuật Quân sự trong Ba lần Kháng chiến chống Nguyên–Mông (TK XIII) – Nhóm 2</div>
-        ${scriptContent}
-    </body></html>`);
-    printWin.document.close();
-    printWin.print();
+    const header = document.createElement("div");
+    header.className = "print-script-header";
+    header.innerHTML = `
+        <h1>KỊCH BẢN THUYẾT TRÌNH CHI TIẾT</h1>
+        <h3>Chuyên đề: Nghệ thuật Quân sự trong Ba lần Kháng chiến chống Nguyên–Mông (TK XIII)</h3>
+        <p><strong>Giảng viên hướng dẫn:</strong> Giảng viên môn GDQP &nbsp;|&nbsp; <strong>Thực hiện:</strong> Nhóm 2</p>
+        <p style="margin-top: 4px; font-size: 11pt;"><em>Tài liệu thuyết trình chi tiết tương ứng với ${slides.length} Slide trình chiếu</em></p>
+    `;
+    printScriptContainer.appendChild(header);
+    
+    slides.forEach((slide, index) => {
+        const item = document.createElement("div");
+        item.className = "print-script-item";
+        
+        item.innerHTML = `
+            <div class="print-script-item-title">
+                Slide ${index + 1}: ${slide.title}
+                ${slide.subtitle ? ` <span style="font-size: 10pt; font-weight: normal; color: #666;">(${slide.subtitle})</span>` : ''}
+            </div>
+            <div class="print-script-item-content">
+                ${slide.speakerNotes || '<em style="color:#999;">Chưa có kịch bản cho slide này.</em>'}
+            </div>
+        `;
+        printScriptContainer.appendChild(item);
+    });
+    
+    document.body.classList.add("is-printing-script");
+    
+    setTimeout(() => {
+        window.print();
+        document.body.classList.remove("is-printing-script");
+        printScriptContainer.innerHTML = "";
+    }, 300);
 }
 
-document.getElementById('print-btn').addEventListener('click', printSlidesPDF);
-document.getElementById('print-script-btn').addEventListener('click', printScriptPDF);
-document.getElementById('print-script-btn-presenter').addEventListener('click', printScriptPDF);
 
 // ==========================================================================
 // TOUCH/SWIPE SUPPORT

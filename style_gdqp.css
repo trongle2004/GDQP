@@ -1393,12 +1393,87 @@ body.military-theme .cover-title span {
 /* ==========================================================================
    PRINT STYLES
    ========================================================================== */
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+/* Ẩn các vùng đệm in khỏi màn hình hiển thị bình thường */
+#print-container, #print-script-container {
+    display: none;
+}
+
 @media print {
-    body { overflow: auto; height: auto; }
-    #sidebar, #controls-footer, #expand-sidebar-btn, #presenter-panel, #theme-modal { display: none !important; }
-    #slide-workspace { padding: 0; }
-    #slide-viewer { border: none; box-shadow: none; border-radius: 0; padding: 30px; }
-    #progress-bar-container { display: none; }
+    /* Ép biến màu về giao diện sáng (Light Theme) để tránh in nền đen xì */
+    :root {
+        --bg-app: #ffffff;
+        --bg-workspace: #ffffff;
+        --bg-card: #ffffff;
+        --text-primary: #000000;
+        --text-secondary: #333333;
+        --text-muted: #666666;
+        --border-color: #cccccc;
+        --card-blur: none;
+    }
+
+    body { 
+        overflow: visible !important; 
+        height: auto !important; 
+    }
+
+    /* Ẩn toàn bộ giao diện app web khi đang trong chế độ in */
+    body.is-printing #app-container,
+    body.is-printing-script #app-container,
+    #progress-bar-container, 
+    #theme-modal { 
+        display: none !important; 
+    }
+
+    /* Bật hiển thị cho vùng đệm chứa dữ liệu in */
+    body.is-printing #print-container,
+    body.is-printing-script #print-script-container {
+        display: block !important;
+    }
+
+    /* --- Dàn trang cho Xuất Slide PDF --- */
+    #print-container .slide-card {
+        page-break-after: always; /* Ngắt trang sau mỗi slide */
+        break-after: page;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 40px;
+        margin-bottom: 20px;
+        box-shadow: none;
+        height: 95vh; /* Căn chỉnh để vừa 1 trang A4 ngang */
+    }
+
+    /* --- Dàn trang cho Xuất Kịch Bản PDF --- */
+    .print-script-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 20px;
+    }
+    
+    .print-script-header h1 { font-size: 18pt; margin-bottom: 10px; }
+    .print-script-header h3 { font-size: 14pt; margin-bottom: 10px; font-weight: normal; }
+    
+    .print-script-item {
+        margin-bottom: 30px;
+        page-break-inside: avoid; /* Tránh 1 slide bị cắt làm đôi giữa 2 trang giấy */
+        break-inside: avoid;
+    }
+    
+    .print-script-item-title {
+        font-size: 14pt;
+        font-weight: bold;
+        margin-bottom: 8px;
+        border-bottom: 1px dashed var(--border-color);
+        padding-bottom: 4px;
+    }
+    
+    .print-script-item-content {
+        font-size: 12pt;
+        line-height: 1.6;
+    }
 }
 
 /* ==========================================================================
