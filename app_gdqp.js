@@ -671,10 +671,15 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSlideListUI();
     renderSlide(slides[0]);
 
-    // Bổ sung: Gắn sự kiện cho các nút Xuất PDF và Xuất Kịch Bản
-    document.getElementById('print-btn').addEventListener('click', printSlidesPDF);
-    document.getElementById('print-script-btn').addEventListener('click', printScriptPDF);
-    document.getElementById('print-script-btn-presenter').addEventListener('click', printScriptPDF);
+    // Gắn sự kiện chỉ khi phần tử tồn tại để tránh lỗi khi nút bị ẩn/comment trong HTML
+    const printBtn = document.getElementById('print-btn');
+    if (printBtn) printBtn.addEventListener('click', printSlidesPDF);
+
+    const printScriptBtn = document.getElementById('print-script-btn');
+    if (printScriptBtn) printScriptBtn.addEventListener('click', printScriptPDF);
+
+    const printScriptPresenterBtn = document.getElementById('print-script-btn-presenter');
+    if (printScriptPresenterBtn) printScriptPresenterBtn.addEventListener('click', printScriptPDF);
 });
 
 // ==========================================================================
@@ -787,14 +792,20 @@ function toggleSidebar() {
     }
 }
 
-document.getElementById('toggle-sidebar-btn').addEventListener('click', toggleSidebar);
-document.getElementById('expand-sidebar-btn').addEventListener('click', toggleSidebar);
+const toggleSidebarBtn = document.getElementById('toggle-sidebar-btn');
+if (toggleSidebarBtn) toggleSidebarBtn.addEventListener('click', toggleSidebar);
+
+const expandSidebarBtn = document.getElementById('expand-sidebar-btn');
+if (expandSidebarBtn) expandSidebarBtn.addEventListener('click', toggleSidebar);
 
 // ==========================================================================
 // NAVIGATION BUTTONS
 // ==========================================================================
-document.getElementById('next-btn').addEventListener('click', goToNextSlide);
-document.getElementById('prev-btn').addEventListener('click', goToPrevSlide);
+const nextBtn = document.getElementById('next-btn');
+if (nextBtn) nextBtn.addEventListener('click', goToNextSlide);
+
+const prevBtn = document.getElementById('prev-btn');
+if (prevBtn) prevBtn.addEventListener('click', goToPrevSlide);
 
 // ==========================================================================
 // PRESENTER PANEL
@@ -802,42 +813,55 @@ document.getElementById('prev-btn').addEventListener('click', goToPrevSlide);
 function togglePresenter() {
     isPresenterOpen = !isPresenterOpen;
     const panel = document.getElementById('presenter-panel');
-    panel.classList.toggle('collapsed', !isPresenterOpen);
+    if (panel) panel.classList.toggle('collapsed', !isPresenterOpen);
     
     if (isPresenterOpen && !timerInterval) {
         timerInterval = setInterval(() => {
             timerSeconds++;
             const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
             const secs = String(timerSeconds % 60).padStart(2, '0');
-            document.getElementById('presenter-timer').textContent = `${mins}:${secs}`;
+            const timerEl = document.getElementById('presenter-timer');
+            if (timerEl) timerEl.textContent = `${mins}:${secs}`;
         }, 1000);
     }
 }
 
-document.getElementById('presenter-btn').addEventListener('click', togglePresenter);
-document.getElementById('close-presenter-btn').addEventListener('click', () => {
+const presenterBtn = document.getElementById('presenter-btn');
+if (presenterBtn) presenterBtn.addEventListener('click', togglePresenter);
+
+const closePresenterBtn = document.getElementById('close-presenter-btn');
+if (closePresenterBtn) closePresenterBtn.addEventListener('click', () => {
     isPresenterOpen = false;
-    document.getElementById('presenter-panel').classList.add('collapsed');
+    const panel = document.getElementById('presenter-panel');
+    if (panel) panel.classList.add('collapsed');
 });
 
-document.getElementById('timer-reset-btn').addEventListener('click', () => {
+const timerResetBtn = document.getElementById('timer-reset-btn');
+if (timerResetBtn) timerResetBtn.addEventListener('click', () => {
     timerSeconds = 0;
-    document.getElementById('presenter-timer').textContent = '00:00';
+    const timerEl = document.getElementById('presenter-timer');
+    if (timerEl) timerEl.textContent = '00:00';
 });
 
-document.getElementById('font-inc-btn').addEventListener('click', () => {
+const fontIncBtn = document.getElementById('font-inc-btn');
+if (fontIncBtn) fontIncBtn.addEventListener('click', () => {
     if (currentFontSize < 30) {
         currentFontSize += 2;
-        document.getElementById('speaker-script').style.fontSize = currentFontSize + 'px';
-        document.getElementById('font-size-display').textContent = currentFontSize + 'px';
+        const scriptEl = document.getElementById('speaker-script');
+        if (scriptEl) scriptEl.style.fontSize = currentFontSize + 'px';
+        const displayEl = document.getElementById('font-size-display');
+        if (displayEl) displayEl.textContent = currentFontSize + 'px';
     }
 });
 
-document.getElementById('font-dec-btn').addEventListener('click', () => {
+const fontDecBtn = document.getElementById('font-dec-btn');
+if (fontDecBtn) fontDecBtn.addEventListener('click', () => {
     if (currentFontSize > 10) {
         currentFontSize -= 2;
-        document.getElementById('speaker-script').style.fontSize = currentFontSize + 'px';
-        document.getElementById('font-size-display').textContent = currentFontSize + 'px';
+        const scriptEl = document.getElementById('speaker-script');
+        if (scriptEl) scriptEl.style.fontSize = currentFontSize + 'px';
+        const displayEl = document.getElementById('font-size-display');
+        if (displayEl) displayEl.textContent = currentFontSize + 'px';
     }
 });
 
@@ -846,26 +870,29 @@ document.getElementById('font-dec-btn').addEventListener('click', () => {
 // ==========================================================================
 const themeModal = document.getElementById('theme-modal');
 
-document.getElementById('theme-btn').addEventListener('click', () => {
+const themeBtn = document.getElementById('theme-btn');
+if (themeBtn && themeModal) themeBtn.addEventListener('click', () => {
     themeModal.classList.toggle('hidden');
 });
 
-document.getElementById('close-theme-modal-btn').addEventListener('click', () => {
+const closeThemeModalBtn = document.getElementById('close-theme-modal-btn');
+if (closeThemeModalBtn && themeModal) closeThemeModalBtn.addEventListener('click', () => {
     themeModal.classList.add('hidden');
 });
 
-themeModal.addEventListener('click', (e) => {
+if (themeModal) themeModal.addEventListener('click', (e) => {
     if (e.target === themeModal) themeModal.classList.add('hidden');
 });
 
 document.querySelectorAll('.theme-option-card').forEach(btn => {
     btn.addEventListener('click', () => {
         const theme = btn.dataset.theme;
+        if (!theme) return;
         document.body.className = theme + '-theme';
         currentTheme = theme;
         document.querySelectorAll('.theme-option-card').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        themeModal.classList.add('hidden');
+        if (themeModal) themeModal.classList.add('hidden');
     });
 });
 
@@ -875,14 +902,17 @@ document.querySelectorAll('.theme-option-card').forEach(btn => {
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(() => {});
-        document.getElementById('fullscreen-btn').innerHTML = '<i class="fa-solid fa-compress"></i><span class="btn-text">Thu nhỏ</span>';
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        if (fullscreenBtn) fullscreenBtn.innerHTML = '<i class="fa-solid fa-compress"></i><span class="btn-text">Thu nhỏ</span>';
     } else {
         document.exitFullscreen();
-        document.getElementById('fullscreen-btn').innerHTML = '<i class="fa-solid fa-expand"></i><span class="btn-text">Toàn màn hình</span>';
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        if (fullscreenBtn) fullscreenBtn.innerHTML = '<i class="fa-solid fa-expand"></i><span class="btn-text">Toàn màn hình</span>';
     }
 }
 
-document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+if (fullscreenBtn) fullscreenBtn.addEventListener('click', toggleFullscreen);
 
 // ==========================================================================
 // PRINT FUNCTIONS
